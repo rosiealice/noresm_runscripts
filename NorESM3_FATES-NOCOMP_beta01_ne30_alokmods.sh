@@ -126,7 +126,7 @@ then
 
 
 	# Add in Alok's changes to sourcemods
-cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.cdeps/esmFldsExchange_cesm_mod.F90 SourceMods/src.cdeps
+cp /cluster/projects/nn9560k/alok/NorESM_ALPHA07A/components/cmeps/mediator/esmFldsExchange_cesm_mod.F90 SourceMods/src.cdeps
 cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.cam/atm_import_export.F90 SourceMods/src.cam
 cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.clm/lnd_import_export.F90 SourceMods/src.clm
 
