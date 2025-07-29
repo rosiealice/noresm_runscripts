@@ -20,10 +20,9 @@ USER="rosief"
 project='NN2345K' #nn8057k: EMERALD, nn2806k: METOS, nn9188k: CICERO, nn9560k: NorESM (INES2), nn9039k: NorESM (UiB: Climate predition unit?), nn2345k: NorESM (EU projects)
 machine='betzy'
 
-resolution="ne30pg3_tn14" #f19_g17, ne30pg3_tn14, f45_f45_mg37  
+resolution="ne30pg3_tn14" #,"ne30pg3_tn14" #f19_g17, ne30pg3_tn14, f45_f45_mg37  
 casename=$0
-compset="2000_DATM%QIA_CLM60%FATES_SICE_SOCN_MOSART_SGLC_SWAV"
-
+compset="1850_CAM70%LT%NORESM%CAMoslo_CLM60%FATES_CICE_BLOM%HYB%ECO_MOSART_DGLC%NOEVOLVE_SWAV_SESP_BGC%BPRP"
 
 #NorESM dir
 noresmrepo="NorESM_3_0_beta01_ctsm_v9" 
@@ -92,6 +91,9 @@ then
         
         echo "making case:" $scriptsdir$casename        
         ./create_newcase --case $scriptsdir$casename --compset $compset --res $resolution --project $project --run-unsupported --mach betzy --pecount M
+
+
+	
         cd $scriptsdir$casename
 
         #XML changes
@@ -113,8 +115,16 @@ then
         echo "use_fates_fixed_biogeog=.true." >> $scriptsdir$casename/user_nl_clm
         echo "use_fates_luh = .false." >> $scriptsdir$casename/user_nl_clm    
 	echo "hist_fincl1='FCO2'" >> $scriptsdir$casename/user_nl_clm
+	echo "force_send_to_atm = .true."  >> $scriptsdir$casename/user_nl_clm
         echo "finidat = '/cluster/shared/noresm/inputdata/share_kjetil/i1850.ne30pg3_tn14.fatesnocomp.ctsm5.3.045_noresm_v9.CPLHIST_LUH3_ConstLU_coldstart_v21_wFCO2.20250628.clm2.r.0101-01-01-00000.nc'" >> $scriptsdir$casename/user_nl_clm
 
+        cp /cluster/projects/nn9560k/alok/cases_noresm3/fco2_test_origmap/user_nl_cam .
+	cp /cluster/projects/nn9560k/alok/cases_noresm3/fco2_test_origmap/user_nl_blom .
+	cp /cluster/projects/nn9560k/alok/cases_noresm3/fco2_test_origmap/user_nl_cice .
+	cp /cluster/projects/nn9560k/alok/cases_noresm3/fco2_test_origmap/user_nl_cam .
+	cp /cluster/projects/nn9560k/alok/cases_noresm3/fco2_test_origmap/user_nl_cpl .
+	
+	
     fi
 fi
 
