@@ -97,7 +97,7 @@ then
         #XML changes
         echo 'updating settings'
         ./xmlchange STOP_OPTION=nyears
-        ./xmlchange STOP_N=2
+        ./xmlchange STOP_N=1
         ./xmlchange RESUBMIT=0
         ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=02:00:00
         ./xmlchange --subgroup case.st_archive JOB_WALLCLOCK_TIME=01:00:00
@@ -112,20 +112,10 @@ then
         echo "use_fates_nocomp=.true." >> $scriptsdir$casename/user_nl_clm
         echo "use_fates_fixed_biogeog=.true." >> $scriptsdir$casename/user_nl_clm
         echo "use_fates_luh = .false." >> $scriptsdir$casename/user_nl_clm    
-        echo "force_send_to_atm = .true." >> $scriptsdir$casename/user_nl_clm
 	echo "hist_fincl1='FCO2'" >> $scriptsdir$casename/user_nl_clm
 
-
-        #Add following lines to user_nl_cpl
-        echo 'histaux_l2x1yrg = .true.' >> $scriptsdir$casename/user_nl_cpl
-        echo 'flds_co2b = .true.' >> $scriptsdir$casename/user_nl_cpl
     fi
 fi
-
-# Add in Alok's changes to sourcemods
-cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.cdeps/esmFldsExchange_cesm_mod.F90 SourceMods/src.cdeps/
-cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.cam/atm_import_export.F90 SourceMods/src.cam
-cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.clm/lnd_import_export.F90 SourceMods/src.clm
 
 
 #Build case case
