@@ -21,13 +21,13 @@ project='NN2345K' #nn8057k: EMERALD, nn2806k: METOS, nn9188k: CICERO, nn9560k: N
 machine='betzy'
 
 resolution="f45_f45_mg37" #"ne30pg3_tn14" #f19_g17, ne30pg3_tn14, f45_f45_mg37  
-casename="n1850esm.$resolution.hybrid_fates-nocomp.3.0a06a_emis.20250721_new"
+casename="i2000.$resolution.fates-nocomp.beta01.v9"
 compset="2000_DATM%QIA_CLM60%FATES_SICE_SOCN_MOSART_SGLC_SWAV"
 
 
 #NorESM dir
-noresmrepo="NorESM_3_0_alpha06_wFatesNBP"
-noresmversion="noresm3_0_alpha06a"
+noresmrepo="NorESM_3_0_beta01_ctsm_v9" 
+noresmversion="noresm3_0_beta01"
 
 # aka where do you want the code and scripts to live?
 workpath="/cluster/work/users/$USER/" 
@@ -36,7 +36,7 @@ workpath="/cluster/work/users/$USER/"
 scriptsdir=$workpath$noresmrepo/cime/scripts/
 
 #case dir
-casedir=$workpath$casename
+casedir=$scriptsdir$casename
 
 #where are we now?
 startdr=$(pwd)
@@ -76,82 +76,49 @@ then
 
     if [[ $forcenewcase -eq 1 ]]
     then 
-        if [[ -d "$workpath$casename" ]] 
+        if [[ -d "$scriptsdir$casename" ]] 
         then    
-        echo "$workpath$casename exists on your filesystem. Removing it!"
-        rm -rf $workpath$casename
+        echo "$scriptsdir$casename exists on your filesystem. Removing it!"
+        rm -rf $scriptsdir$casename
         rm -r $workpath/noresm/$casename
         rm -r $workpath/archive/$casename
         rm -r $casename
         fi
     fi
-    if [[ -d "$workpath$casename" ]] 
+    if [[ -d "$scriptsdir$casename" ]] 
     then    
-        echo "$workpath$casename exists on your filesystem."
+        echo "$scriptsdir$casename exists on your filesystem."
     else
         
-        echo "making case:" $workpath$casename        
-        ./create_newcase --case $workpath$casename --compset $compset --res $resolution --project $project --run-unsupported --mach betzy --pecount M
-        cd $workpath$casename
+        echo "making case:" $scriptsdir$casename        
+        ./create_newcase --case $scriptsdir$casename --compset $compset --res $resolution --project $project --run-unsupported --mach betzy --pecount M
+        cd $scriptsdir$casename
 
         #XML changes
         echo 'updating settings'
-        ./xmlchange NTASKS=1920
-        ./xmlchange NTASKS_OCN=256
-        ./xmlchange ROOTPE=0
-        ./xmlchange ROOTPE_OCN=1920
         ./xmlchange STOP_OPTION=nyears
         ./xmlchange STOP_N=2
         ./xmlchange RESUBMIT=0
-        ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=48:00:00
-        ./xmlchange --subgroup case.st_archive JOB_WALLCLOCK_TIME=03:00:00
-
-        if [[ $numCPUs -ne 0 ]]
-            then 
-                echo "setting #CPUs to $numCPUs"
-                ./xmlchange NTASKS_ATM=$numCPUs
-                ./xmlchange NTASKS_OCN=$numCPUs
-                ./xmlchange NTASKS_LND=$numCPUs
-                ./xmlchange NTASKS_ICE=$numCPUs
-                ./xmlchange NTASKS_ROF=$numCPUs
-                ./xmlchange NTASKS_GLC=$numCPUs
-            fi
+        ./xmlchange --subgroup case.run JOB_WALLCLOCK_TIME=02:00:00
+        ./xmlchange --subgroup case.st_archive JOB_WALLCLOCK_TIME=01:00:00
 
         echo 'done with xmlchanges'        
         
         ./case.setup
         echo ' '
-        echo "Done with Setup. Update namelists in $workpath$casename/user_nl_*"
+        echo "Done with Setup. Update namelists in $scriptsdir$casename/user_nl_*"
 
         #Add following lines to user_nl_clm    
-        echo "use_fates_nocomp=.true." >> $workpath$casename/user_nl_clm
-        echo "use_fates_fixed_biogeog=.true." >> $workpath$casename/user_nl_clm
-        echo "use_fates_luh = .false." >> $workpath$casename/user_nl_clm    
-        echo "force_send_to_atm = .true." >> $workpath$casename/user_nl_clm
-	echo "hist_fincl1='FCO2'" >> $workpath$casename/user_nl_clm
+        echo "use_fates_nocomp=.true." >> $scriptsdir$casename/user_nl_clm
+        echo "use_fates_fixed_biogeog=.true." >> $scriptsdir$casename/user_nl_clm
+        echo "use_fates_luh = .false." >> $scriptsdir$casename/user_nl_clm    
+        echo "force_send_to_atm = .true." >> $scriptsdir$casename/user_nl_clm
+	echo "hist_fincl1='FCO2'" >> $scriptsdir$casename/user_nl_clm
 
-        #Add following lines to user_nl_cice
-        echo "ice_ic = '/cluster/shared/noresm/inputdata/restart/NOIIAJRAOC20TR_TL319_tn14_ppm_20240816/rest/1775-01-01-00000/NOIIAJRAOC20TR_TL319_tn14_ppm_20240816.cice.r.1775-01-01-00000.nc'" >> $workpath$casename/user_nl_cice   
-
-        #Add following lines to user_nl_blom
-        echo 'ICFILE = "/cluster/shared/noresm/inputdata/restart/NOIIAJRAOC20TR_TL319_tn14_ppm_20240816/rest/1775-01-01-00000/NOIIAJRAOC20TR_TL319_tn14_ppm_20240816.blom.r.1775-01-01-00000.nc"' >> $workpath$casename/user_nl_blom
-        
-        #Add following lines to user_nl_cam
-        echo 'use_aerocom = .true.' >> $workpath$casename/user_nl_cam
-        echo 'interpolate_nlat = 192' >> $workpath$casename/user_nl_cam
-        echo 'interpolate_nlon = 288' >> $workpath$casename/user_nl_cam
-        echo 'interpolate_output = .true.' >> $workpath$casename/user_nl_cam
-        echo 'history_aerosol = .true.' >> $workpath$casename/user_nl_cam
-        echo 'zmconv_c0_lnd = 0.0075D0' >> $workpath$casename/user_nl_cam
-        echo 'zmconv_c0_ocn = 0.0300D0' >> $workpath$casename/user_nl_cam
-        echo 'zmconv_ke = 5.0E-6' >> $workpath$casename/user_nl_cam
-        echo 'zmconv_ke_lnd = 1.0E-5' >> $workpath$casename/user_nl_cam
-        echo 'clim_modal_aero_top_press = 1.D-4' >> $workpath$casename/user_nl_cam
-        echo 'bndtvg = "/cluster/shared/noresm/inputdata/atm/cam/ggas/noaamisc.r8.nc"' >> $workpath$casename/user_nl_cam
 
         #Add following lines to user_nl_cpl
-        echo 'histaux_l2x1yrg = .true.' >> $workpath$casename/user_nl_cpl
-        echo 'flds_co2b = .true.' >> $workpath$casename/user_nl_cpl
+        echo 'histaux_l2x1yrg = .true.' >> $scriptsdir$casename/user_nl_cpl
+        echo 'flds_co2b = .true.' >> $scriptsdir$casename/user_nl_cpl
     fi
 fi
 
@@ -164,7 +131,7 @@ cp /cluster/projects/nn9560k/alok/cases_noresm3/test_fco2/SourceMods/src.clm/lnd
 #Build case case
 if [[ $dosetup3 -eq 1 ]] 
 then
-    cd $workpath$casename
+    cd $scriptsdir$casename
     echo "Currently in" $(pwd)
     ./case.build
     echo ' '    
@@ -174,7 +141,7 @@ fi
 #Submit job
 if [[ $dosubmit -eq 1 ]] 
 then
-    cd $workpath$casename
+    cd $scriptsdir$casename
     ./case.submit
     echo " "
     echo 'done submitting'       
