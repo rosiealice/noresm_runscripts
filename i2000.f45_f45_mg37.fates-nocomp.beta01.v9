@@ -21,7 +21,7 @@ project='NN2345K' #nn8057k: EMERALD, nn2806k: METOS, nn9188k: CICERO, nn9560k: N
 machine='betzy'
 
 resolution="f45_f45_mg37" #"ne30pg3_tn14" #f19_g17, ne30pg3_tn14, f45_f45_mg37  
-casename="i2000.$resolution.fates-nocomp.beta01.v9"
+casename=$0
 compset="2000_DATM%QIA_CLM60%FATES_SICE_SOCN_MOSART_SGLC_SWAV"
 
 
