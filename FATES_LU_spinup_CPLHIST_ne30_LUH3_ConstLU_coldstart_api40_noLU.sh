@@ -116,6 +116,7 @@ then
         echo "use_fates_nocomp=.true." >> $workpath$casename/user_nl_clm
         echo "use_fates_fixed_biogeog=.true." >> $workpath$casename/user_nl_clm        
         echo "hist_fincl1 = 'FCO2'" >> $workpath$casename/user_nl_clm
+        echo "finidat = '/cluster/shared/noresm/inputdata/share_kjetil/i1850.ne30pg3_tn14.fatesnocomp.ctsm5.3.045_noresm_v9.CPLHIST_LUH3_ConstLU_coldstart_v21_wFCO2.20250628.clm2.r.0101-01-01-00000.nc'" >> $workpath$casename/user_nl_clm	
     fi
 fi
 
