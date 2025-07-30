@@ -18,7 +18,7 @@ machine='betzy'
 
 #NorESM dir
 noresmrepo="NorESM_3_0_beta01_ctsm_v9" 
-noresmversion="ctsm5.3.045_noresm_v9"
+noresmversion="noresm3_0_beta01"
 
 resolution="ne30pg3_tn14" #f19_g17, ne30pg3_tn14, f45_f45_mg37, ne16pg3_tn14 
 casename=$0
